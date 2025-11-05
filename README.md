@@ -1,10 +1,10 @@
-# Vazha 3.0
+# shotdevs-ticket_bot
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Discord.js](https://img.shields.io/badge/Discord.js-v14-blue.svg)](https://discord.js.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Vazha 3.0 is a powerful, multi-server ticket bot for Discord, designed for ultimate customization and scalability.
+shotdevs-ticket_bot is a powerful, multi-server ticket bot for Discord, designed for ultimate customization and scalability.
 
 ## Features
 
@@ -28,8 +28,8 @@ Vazha 3.0 is a powerful, multi-server ticket bot for Discord, designed for ultim
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/vazha-3.0.git
-   cd vazha-3.0
+   git clone https://github.com/shotdevs/shotdevs-ticket_bot.git
+   cd shotdevs-ticket_bot
    ```
 2. **Install dependencies:**
    ```bash
