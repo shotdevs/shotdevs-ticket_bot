@@ -29,6 +29,7 @@ async function startBot() {
             GatewayIntentBits.GuildMembers,
             GatewayIntentBits.MessageContent,
             GatewayIntentBits.DirectMessages,
+            GatewayIntentBits.GuildVoiceStates,
         ],
     });
 

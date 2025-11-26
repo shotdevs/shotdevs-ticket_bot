@@ -4,4 +4,7 @@ module.exports = {
     Ticket: require('./Ticket'),
     UserStats: require('./UserStats'),
     StaffActions: require('./StaffActions'),
+    WelcomeSettings: require('./welcomeSettings'),
+    Leveling: require('./leveling'),
+    VcTime: require('./vcTime'),
 };
