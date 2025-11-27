@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { GuildConfig } = require('../models');
 const { createSuccessContainer } = require('../utils/embedBuilder');
 const { PermissionFlagsBits } = require('discord-api-types/v10');
+const { MessageFlags , MessageFlags } = require('discord.js');
 const logger = require('../utils/logger');
 
 module.exports = {
@@ -52,7 +53,7 @@ module.exports = {
     async execute(interaction) {
         let interactionReplyAvailable = true;
         try {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         } catch (error) {
             console.error('Failed to defer reply (setup):', error);
             if (error && error.code === 10062) {
@@ -109,7 +110,7 @@ module.exports = {
             logger.logError('Setup command error:', error);
             try {
                 if (interactionReplyAvailable && !interaction.replied && !interaction.deferred) {
-                    await interaction.reply({ content: 'An error occurred while processing your command.', ephemeral: true });
+                    await interaction.reply({ content: 'An error occurred while processing your command.', flags: MessageFlags.Ephemeral });
                 } else if (interaction.deferred) {
                     await interaction.editReply({ content: 'An error occurred while processing your command.' });
                 } else {
@@ -121,3 +122,4 @@ module.exports = {
         }
     },
 };
+

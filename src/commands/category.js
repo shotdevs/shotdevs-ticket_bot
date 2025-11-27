@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { CategoryConfig } = require('../models');
 const { createSuccessContainer, createErrorContainer, createInfoContainer } = require('../utils/embedBuilder');
 const { PermissionFlagsBits } = require('discord-api-types/v10');
-const { ChannelType, ButtonStyle } = require('discord.js');
+const { ChannelType, ButtonStyle , MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -75,7 +75,7 @@ module.exports = {
     async execute(interaction) {
         let interactionReplyAvailable = true;
         try {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         } catch (error) {
             console.error('Failed to defer reply (category):', error);
             if (error && error.code === 10062) {
@@ -178,3 +178,4 @@ module.exports = {
         }
     },
 };
+

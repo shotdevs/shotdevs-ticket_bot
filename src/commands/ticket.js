@@ -3,7 +3,7 @@ const { Ticket, StaffActions, CategoryConfig } = require('../models');
 const { closeTicket, deleteTicket } = require('../utils/ticketClosure');
 const { addUserToTicket, removeUserFromTicket, setTicketPermissions } = require('../utils/permissionManager');
 const { createSuccessContainer } = require('../utils/embedBuilder');
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder , MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,7 +25,7 @@ module.exports = {
 
             if (!ticket) {
                 try {
-                    return await interaction.reply({ content: 'This is not a ticket channel.', ephemeral: true });
+                    return await interaction.reply({ content: 'This is not a ticket channel.', flags: MessageFlags.Ephemeral });
                 } catch (error) {
                     // Interaction likely expired
                     return;
@@ -39,7 +39,7 @@ module.exports = {
 
             if (!isStaff && !isCreator && subcommand === 'close') {
                 try {
-                    return await interaction.reply({ content: 'You do not have permission to close this ticket.', ephemeral: true });
+                    return await interaction.reply({ content: 'You do not have permission to close this ticket.', flags: MessageFlags.Ephemeral });
                 } catch (error) {
                     // Interaction likely expired
                     return;
@@ -48,7 +48,7 @@ module.exports = {
 
             if (!isStaff && (subcommand !== 'close')) {
                 try {
-                    return await interaction.reply({ content: 'You do not have permission to manage this ticket.', ephemeral: true });
+                    return await interaction.reply({ content: 'You do not have permission to manage this ticket.', flags: MessageFlags.Ephemeral });
                 } catch (error) {
                     // Interaction likely expired
                     return;
@@ -69,7 +69,7 @@ module.exports = {
 
             } else if (subcommand === 'delete') {
                 try {
-                    await interaction.deferReply({ ephemeral: true });
+                    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                     await deleteTicket(interaction.client, ticket);
                     await interaction.editReply({ content: 'Ticket deleted successfully.' });
                 } catch (error) {
@@ -108,7 +108,7 @@ module.exports = {
             } else if (subcommand === 'reopen') {
                 if (ticket.status !== 'closed') {
                     try {
-                        return await interaction.reply({ content: 'This ticket is not closed.', ephemeral: true });
+                        return await interaction.reply({ content: 'This ticket is not closed.', flags: MessageFlags.Ephemeral });
                     } catch (error) {
                         // Interaction likely expired
                         return;
@@ -143,7 +143,7 @@ module.exports = {
             console.error('Error in ticket command:', error);
             try {
                 // Try to send an error message, but this might fail if the interaction expired
-                await interaction.reply({ content: 'An error occurred while processing your request.', ephemeral: true });
+                await interaction.reply({ content: 'An error occurred while processing your request.', flags: MessageFlags.Ephemeral });
             } catch (replyError) {
                 // Interaction likely expired, which is fine
                 return;

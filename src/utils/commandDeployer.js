@@ -19,6 +19,7 @@ async function deployCommands(mode = 'global', guildId = null) {
 
     try {
         logger.logInfo('Started refreshing application (/) commands.');
+        console.log('DEBUG: DISCORD_CLIENT_ID is:', process.env.DISCORD_CLIENT_ID);
 
         if (mode === 'global') {
             await rest.put(

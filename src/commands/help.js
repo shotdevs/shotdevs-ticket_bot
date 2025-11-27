@@ -25,3 +25,4 @@ module.exports = {
         await interaction.reply(payload);
     },
 };
+

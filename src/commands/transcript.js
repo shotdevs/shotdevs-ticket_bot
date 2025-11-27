@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { Ticket } = require('../models');
 const { generateTranscript } = require('../utils/transcriptGenerator');
-const { AttachmentBuilder } = require('discord.js');
+const { AttachmentBuilder , MessageFlags } = require('discord.js');
 const { PermissionFlagsBits } = require('discord-api-types/v10');
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
     async execute(interaction) {
         let interactionReplyAvailable = true;
         try {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         } catch (error) {
             console.error('Failed to defer reply (transcript):', error);
             if (error && error.code === 10062) {
@@ -45,3 +45,4 @@ module.exports = {
     else await interaction.channel?.send({ content: 'Transcript generated.', files: [attachment] });
     },
 };
+

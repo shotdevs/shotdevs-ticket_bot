@@ -41,7 +41,7 @@ module.exports = {
     async execute(interaction) {
         let interactionReplyAvailable = true;
         try {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         } catch (error) {
             console.error('Failed to defer reply (blacklist):', error);
             if (error && error.code === 10062) {
@@ -91,3 +91,4 @@ module.exports = {
         }
     },
 };
+

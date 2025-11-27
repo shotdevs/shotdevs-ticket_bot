@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { CategoryConfig } = require('../models');
 const { createPanelContainer, COMPONENT_FLAGS } = require('../utils/embedBuilder');
 const { PermissionFlagsBits } = require('discord-api-types/v10');
-const { ButtonStyle } = require('discord.js');
+const { ButtonStyle , MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,10 +17,10 @@ module.exports = {
     async execute(interaction) {
         let interactionReplyAvailable = true;
         try {
-            // Use the supported discord.js option `ephemeral: true` instead of
+            // Use the supported discord.js option `flags: MessageFlags.Ephemeral` instead of
             // passing raw flags. Passing `flags` here can produce malformed
             // requests and lead to `Unknown interaction` errors from the API.
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         } catch (error) {
             console.error('Failed to defer reply:', error);
             // If the interaction is unknown/expired (10062), we can't use the
@@ -132,3 +132,4 @@ module.exports = {
         }
     },
 };
+

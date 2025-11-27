@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require('uuid');
 const { GuildConfig, Ticket, UserStats } = require('../models');
 const { formatTicketName, formatDuration } = require('./formatters');
 const { setTicketPermissions } = require('./permissionManager');
@@ -9,6 +8,9 @@ const { logTicketAction } = require('./auditLogger');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } = require('discord.js');
 
 async function createTicket(client, guild, user, category, modalResponses) {
+    // Dynamic import for ES Module uuid
+    const { v4: uuidv4 } = await import('uuid');
+
     const guildConfig = await GuildConfig.findOne({ guildId: guild.id });
 
     // Blacklist check

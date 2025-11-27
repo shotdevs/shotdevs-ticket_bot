@@ -1,6 +1,7 @@
 const { CategoryConfig, Ticket } = require('../models');
 const { createTicket } = require('./ticketCreation');
 const { closeTicket, deleteTicket } = require('./ticketClosure');
+const { MessageFlags } = require('discord.js');
 
 async function handleModal(interaction) {
     const [action, data] = interaction.customId.split(':');
@@ -12,7 +13,7 @@ async function handleModal(interaction) {
             if (interaction.replied || interaction.deferred) {
                 interactionReplyAvailable = false;
             } else {
-                await interaction.deferReply({ ephemeral: true });
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
             }
         } catch (error) {
             console.error('Failed to defer reply (modal create_ticket):', error);
@@ -22,7 +23,7 @@ async function handleModal(interaction) {
                 return;
             }
         }
-        
+
         const categoryId = data;
         const category = await CategoryConfig.findOne({ categoryId: categoryId, guildId: interaction.guild.id });
 
@@ -32,33 +33,33 @@ async function handleModal(interaction) {
             modalResponses[textInput.customId] = textInput.value;
         }
 
-            try {
-                const ticket = await createTicket(interaction.client, interaction.guild, interaction.user, category, modalResponses);
-                // Respond via interaction if possible, otherwise fall back to a channel message
-                if (interactionReplyAvailable) {
-                    await interaction.editReply({ content: `Ticket created: <#${ticket.channelId}>` });
-                } else {
-                    try {
-                        await interaction.channel?.send({ content: `Ticket created: <#${ticket.channelId}>` });
-                    } catch (sendErr) {
-                        console.error('Failed fallback channel message after ticket creation:', sendErr);
-                    }
-                }
-            } catch (error) {
-                if (interactionReplyAvailable) {
-                    try {
-                        await interaction.editReply({ content: `Error creating ticket: ${error.message}` });
-                    } catch (replyError) {
-                        console.error('Failed to send error reply (modal create_ticket):', replyError);
-                    }
-                } else {
-                    try {
-                        await interaction.channel?.send({ content: `Error creating ticket: ${error.message}` });
-                    } catch (sendErr) {
-                        console.error('Failed fallback channel message for error (modal create_ticket):', sendErr);
-                    }
+        try {
+            const ticket = await createTicket(interaction.client, interaction.guild, interaction.user, category, modalResponses);
+            // Respond via interaction if possible, otherwise fall back to a channel message
+            if (interactionReplyAvailable) {
+                await interaction.editReply({ content: `Ticket created: <#${ticket.channelId}>` });
+            } else {
+                try {
+                    await interaction.channel?.send({ content: `Ticket created: <#${ticket.channelId}>` });
+                } catch (sendErr) {
+                    console.error('Failed fallback channel message after ticket creation:', sendErr);
                 }
             }
+        } catch (error) {
+            if (interactionReplyAvailable) {
+                try {
+                    await interaction.editReply({ content: `Error creating ticket: ${error.message}` });
+                } catch (replyError) {
+                    console.error('Failed to send error reply (modal create_ticket):', replyError);
+                }
+            } else {
+                try {
+                    await interaction.channel?.send({ content: `Error creating ticket: ${error.message}` });
+                } catch (sendErr) {
+                    console.error('Failed fallback channel message for error (modal create_ticket):', sendErr);
+                }
+            }
+        }
 
     } else if (action === 'close_ticket_reason' || action === 'close_ticket') {
         let interactionReplyAvailable = true;
@@ -67,7 +68,7 @@ async function handleModal(interaction) {
             if (interaction.replied || interaction.deferred) {
                 interactionReplyAvailable = false;
             } else {
-                await interaction.deferReply({ ephemeral: true });
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
             }
         } catch (error) {
             console.error('Failed to defer reply (modal close_ticket):', error);
@@ -77,11 +78,11 @@ async function handleModal(interaction) {
                 return;
             }
         }
-        
+
         const ticketId = data;
         const reason = interaction.fields.getTextInputValue('close_reason');
         const ticket = await Ticket.findOne({ ticketId: ticketId });
-        
+
         if (!ticket) {
             if (interactionReplyAvailable) {
                 try {
@@ -99,10 +100,10 @@ async function handleModal(interaction) {
                 }
             }
         }
-        
+
         try {
             await closeTicket(interaction.client, ticket, interaction.user, reason);
-            
+
             // Respond or fallback to channel message
             if (interactionReplyAvailable) {
                 try {
@@ -139,7 +140,7 @@ async function handleModal(interaction) {
             if (interaction.replied || interaction.deferred) {
                 interactionReplyAvailable = false;
             } else {
-                await interaction.deferReply({ ephemeral: true });
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
             }
         } catch (error) {
             console.error('Failed to defer reply (modal confirm_delete):', error);
@@ -149,10 +150,10 @@ async function handleModal(interaction) {
                 return;
             }
         }
-        
+
         const ticketId = data;
         const confirmation = interaction.fields.getTextInputValue('confirmation');
-        
+
         if (confirmation !== 'DELETE') {
             if (interactionReplyAvailable) {
                 try {
@@ -170,9 +171,9 @@ async function handleModal(interaction) {
                 }
             }
         }
-        
+
         const ticket = await Ticket.findOne({ ticketId: ticketId });
-        
+
         if (!ticket) {
             if (interactionReplyAvailable) {
                 try {
@@ -190,10 +191,10 @@ async function handleModal(interaction) {
                 }
             }
         }
-        
+
         try {
             await deleteTicket(interaction.client, ticket);
-            
+
             if (interactionReplyAvailable) {
                 try {
                     await interaction.editReply({ content: 'Ticket deleted.' });

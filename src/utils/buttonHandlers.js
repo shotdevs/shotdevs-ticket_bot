@@ -1,6 +1,6 @@
 const { closeTicket } = require('./ticketClosure');
 const { Ticket, StaffActions } = require('../models');
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, MessageFlags } = require('discord.js');
 const { createTicket } = require('./ticketCreation');
 const { CategoryConfig } = require('../models');
 const { createSuccessContainer } = require('./embedBuilder');
@@ -105,7 +105,7 @@ async function handleButton(interaction) {
         
         try {
             if (!ticket) {
-                return interaction.reply({ content: 'This ticket no longer exists.', ephemeral: true });
+                return interaction.reply({ content: 'This ticket no longer exists.', flags: MessageFlags.Ephemeral });
             }
             
             // Check if user has permission to add users (creator or staff)
@@ -115,7 +115,7 @@ async function handleButton(interaction) {
             const isCreator = ticket.creatorId === interaction.user.id;
             
             if (!isStaff && !isCreator) {
-                return interaction.reply({ content: 'You do not have permission to add users to this ticket.', ephemeral: true });
+                return interaction.reply({ content: 'You do not have permission to add users to this ticket.', flags: MessageFlags.Ephemeral });
             }
             
             // Fetch members from the guild (limit to 25 for select menu limit)
@@ -132,7 +132,7 @@ async function handleButton(interaction) {
             if (memberOptions.length === 0) {
                 return interaction.reply({ 
                     content: 'No users available to add to this ticket.', 
-                    ephemeral: true 
+                    flags: MessageFlags.Ephemeral 
                 });
             }
             
@@ -148,7 +148,7 @@ async function handleButton(interaction) {
             await interaction.reply({ 
                 content: 'Select a user to add to the ticket:', 
                 components: [row],
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         } catch (error) {
             // Interaction likely expired
