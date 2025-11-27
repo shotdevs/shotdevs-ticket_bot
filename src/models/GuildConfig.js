@@ -28,6 +28,13 @@ const guildConfigSchema = new mongoose.Schema({
     },
     blacklistedUsers: { type: [String], default: [] },
     blacklistedRoles: { type: [String], default: [] },
+    levelingEnabled: { type: Boolean, default: false },
+    levelUpChannelId: { type: String, default: null },
+    roleRewards: [{
+        level: { type: Number, required: true },
+        roleId: { type: String, required: true },
+    }],
+    messageLogChannelId: { type: String, default: null },
 }, { timestamps: true });
 
 module.exports = mongoose.model('GuildConfig', guildConfigSchema);
